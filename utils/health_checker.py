@@ -1,7 +1,7 @@
 import time
 from typing import Callable, List
 
-from logger import logger
+from .logger import logger
 
 
 class HealthChecker:

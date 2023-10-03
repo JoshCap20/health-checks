@@ -1,38 +1,57 @@
+import argparse
 import sys
 import time
 
-from logger import logger
+import checks.connection as conn_check
 import checks.ping as ping_check
 import checks.ssl_expiry as ssl_check
-import checks.connection as conn_check
-import checks.config as config_check
+from health_checker import HealthChecker
+from logger import logger
 
-from config import PING_TIMEOUT, TEST_URLS
 
-class HealthChecker:
-    @staticmethod
-    def run() -> None:
-        logger.info("Starting health check at %s", time.strftime("%H:%M:%S", time.localtime()))
-        
-        # Validate the config first
-        if not config_check.validate_config(TEST_URLS):
-            logger.error("Configuration validation failed!")
-            sys.exit(1)
+def get_args():
+    parser = argparse.ArgumentParser(description="Health Checker Tool")
 
-        for key, value in TEST_URLS.items():
-            logger.info("Checking %s...", key)
-            for url in value:
-                ping_check.check_ping(url)
-                ssl_check.check_ssl_expiry(url)
-            logger.info("Finished checking %s.", key)
-            
-        logger.info("Finished health check at %s", time.strftime("%H:%M:%S", time.localtime()))
+    # Ping timeout argument
+    parser.add_argument(
+        "--ping-timeout",
+        type=int,
+        default=180,
+        help="Ping timeout in seconds. Default is 180 seconds.",
+    )
+
+    # URLs argument (comma-separated)
+    parser.add_argument(
+        "--urls",
+        type=str,
+        required=True,
+        help="Comma-separated list of URLs to be checked.",
+    )
+
+    # Modules argument (comma-separated)
+    parser.add_argument(
+        "--modules",
+        type=str,
+        default="ping",
+        help="Comma-separated list of modules to be used for checking. Available modules: ping, ssl_expiry. Default is 'ping,ssl_expiry'.",
+    )
+
+    return parser.parse_args()
 
 
 if __name__ == "__main__":
+    args = get_args()
+    ping_timeout = args.ping_timeout
+    urls = args.urls.split(",")
+    modules = args.modules.split(",")
+
     while True:
         if conn_check.check_connection():
-            HealthChecker.run()
+            functions = []
+            for module in modules:
+                if module == "ping":
+                    functions.append(ping_check.check_ping)
+            HealthChecker.run(urls, functions)
         else:
             logger.error("Lost Wi-Fi connectivity. Stopping health checks.")
             should_resume: str = input("Would you like to resume health checks? (y/n) ")
@@ -41,4 +60,4 @@ if __name__ == "__main__":
             else:
                 logger.info("Exiting.")
                 sys.exit()
-        time.sleep(PING_TIMEOUT)
+        time.sleep(args.ping_timeout)

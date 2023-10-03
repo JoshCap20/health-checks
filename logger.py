@@ -1,8 +1,6 @@
 import logging
 import sys
 
-from config import ERROR_LOG_NAME, INFO_LOG_NAME
-
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -16,13 +14,19 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 # Log handler
-file_handler = logging.FileHandler(INFO_LOG_NAME)
+file_handler = logging.FileHandler("logs/info.log")
 file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
+# Debug handler
+file_handler = logging.FileHandler("logs/debug.log")
+file_handler.setLevel(logging.DEBUG)
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
 # Error handler
-file_handler = logging.FileHandler(ERROR_LOG_NAME)
+file_handler = logging.FileHandler("logs/error.log")
 file_handler.setLevel(logging.ERROR)
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)

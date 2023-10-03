@@ -5,7 +5,7 @@ import requests
 from logger import logger
 
 
-def ping(url: str, retries: int = 3) -> None:
+def check_ping(url: str, retries: int = 3) -> None:
     for _ in range(retries):
         try:
             start_time = time.time()
@@ -15,6 +15,7 @@ def ping(url: str, retries: int = 3) -> None:
                 logger.info(
                     f"Endpoint {url} is up! Response Time: {response_time:.2f}s"
                 )
+                return
         except requests.RequestException:
             logger.debug(f"Endpoint {url} failed to respond on attempt {_ + 1}.")
     logger.error(f"Endpoint {url} is down!")

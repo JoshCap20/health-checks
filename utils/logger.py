@@ -1,16 +1,37 @@
 import logging
 import sys
 
+from termcolor import colored
+
+class ColoredFormatter(logging.Formatter):
+    COLORS = {
+        'DEBUG': 'blue',
+        'INFO': 'green',
+        'WARNING': 'yellow',
+        'ERROR': 'red',
+        'CRITICAL': 'magenta',
+    }
+
+    def format(self, record):
+        log_message = super(ColoredFormatter, self).format(record)
+        return colored(log_message, self.COLORS.get(record.levelname))
+
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)  # This will allow the logger to process all messages.
+logger.setLevel(logging.DEBUG)
 
-# Formatter
-formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+format_string = "[%(asctime)s] %(levelname)s - %(message)s"
+date_format = "%d/%b/%Y %H:%M:%S"
 
-# Console handler
+# Standard formatter
+formatter = logging.Formatter(format_string, datefmt=date_format)
+
+# Colored formatter for console
+colored_formatter = ColoredFormatter(format_string, datefmt=date_format)
+
+# Console handler with colored output
 console_handler = logging.StreamHandler(sys.stdout)
 console_handler.setLevel(logging.INFO)
-console_handler.setFormatter(formatter)
+console_handler.setFormatter(colored_formatter)
 
 # File handlers
 info_file_handler = logging.FileHandler("logs/info.log")
@@ -25,7 +46,6 @@ error_file_handler = logging.FileHandler("logs/error.log")
 error_file_handler.setLevel(logging.ERROR)
 error_file_handler.setFormatter(formatter)
 
-# Add the handlers to the logger
 logger.addHandler(console_handler)
 logger.addHandler(info_file_handler)
 logger.addHandler(debug_file_handler)

@@ -1,6 +1,7 @@
 import argparse
 import sys
 import time
+from typing import Callable
 
 import checks.connection as conn_check
 import checks.database as db_check
@@ -91,10 +92,12 @@ if __name__ == "__main__":
 
     while True:
         if conn_check.check_connection():
+            mappings: dict[Callable : list[str]] = {}
             if "db" in modules:
-                HealthChecker.run(dbs, [module_function_mapping["db"]])
+                mappings[module_function_mapping["db"]] = dbs
             if "ping" in modules:
-                HealthChecker.run(urls, [module_function_mapping["ping"]])
+                mappings[module_function_mapping["ping"]] = urls
+            HealthChecker.run(mappings)
         else:
             logger.error("Lost Wi-Fi connectivity. Stopping health checks.")
             should_resume: str = input("Would you like to resume health checks? (y/n) ")

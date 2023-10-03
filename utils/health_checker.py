@@ -6,13 +6,13 @@ from .logger import logger
 
 class HealthChecker:
     @staticmethod
-    def run(urls: List[str], funcs: List[Callable]) -> None:
+    def run(checks: dict[Callable : list[str]]) -> None:
         logger.info(
             "Starting health check at %s", time.strftime("%H:%M:%S", time.localtime())
         )
-        for url in urls:
-            for func in funcs:
-                func(url)
+        for check, args in checks.items():
+            for arg in args:
+                check(arg)
         logger.info(
             "Finished health check at %s", time.strftime("%H:%M:%S", time.localtime())
         )

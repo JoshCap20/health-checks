@@ -1,6 +1,6 @@
 import socket
 
-from logger import logger
+from utils.logger import logger
 
 
 def check_connection() -> bool:

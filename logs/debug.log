@@ -1,27 +1,3 @@
-2023-10-03 13:50:52,246 - INFO - Connected to Wi-Fi.
-2023-10-03 13:50:52,247 - INFO - Starting health check at 13:50:52
-2023-10-03 13:50:52,247 - INFO - Checking django-backend...
-2023-10-03 13:50:52,990 - INFO - Endpoint https://scanbandz.com is up! Response Time: 0.74s
-2023-10-03 13:50:53,395 - INFO - Endpoint https://scanbandz.com/host is up! Response Time: 0.40s
-2023-10-03 13:50:53,398 - INFO - Finished checking django-backend.
-2023-10-03 13:50:53,398 - INFO - Checking angular-ticket-frontend...
-2023-10-03 13:50:53,677 - INFO - Endpoint https://tickets.scanbandz.com is up! Response Time: 0.28s
-2023-10-03 13:50:53,946 - INFO - Endpoint https://tickets.scanbandz.com/event/32 is up! Response Time: 0.27s
-2023-10-03 13:50:54,233 - INFO - Endpoint https://tickets.scanbandz.com/donate/32 is up! Response Time: 0.29s
-2023-10-03 13:50:54,236 - INFO - Finished checking angular-ticket-frontend.
-2023-10-03 13:50:54,236 - INFO - Finished health check at 13:50:54
-2023-10-03 13:53:54,342 - INFO - Connected to Wi-Fi.
-2023-10-03 13:53:54,343 - INFO - Starting health check at 13:53:54
-2023-10-03 13:53:54,343 - INFO - Checking django-backend...
-2023-10-03 13:53:55,111 - INFO - Endpoint https://scanbandz.com is up! Response Time: 0.77s
-2023-10-03 13:53:55,503 - INFO - Endpoint https://scanbandz.com/host is up! Response Time: 0.39s
-2023-10-03 13:53:55,505 - INFO - Finished checking django-backend.
-2023-10-03 13:53:55,506 - INFO - Checking angular-ticket-frontend...
-2023-10-03 13:53:55,775 - INFO - Endpoint https://tickets.scanbandz.com is up! Response Time: 0.27s
-2023-10-03 13:53:56,032 - INFO - Endpoint https://tickets.scanbandz.com/event/32 is up! Response Time: 0.25s
-2023-10-03 13:53:56,297 - INFO - Endpoint https://tickets.scanbandz.com/donate/32 is up! Response Time: 0.26s
-2023-10-03 13:53:56,300 - INFO - Finished checking angular-ticket-frontend.
-2023-10-03 13:53:56,301 - INFO - Finished health check at 13:53:56
 2023-10-03 13:59:26,435 - INFO - Connected to Wi-Fi.
 2023-10-03 13:59:26,435 - INFO - Starting health check at 13:59:26
 2023-10-03 13:59:27,037 - INFO - Endpoint https://scanbandz.com is up! Response Time: 0.60s

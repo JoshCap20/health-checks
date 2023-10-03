@@ -2,7 +2,7 @@ import datetime
 import socket
 import ssl
 
-from logger import logger
+from utils.logger import logger
 
 
 def check_ssl_expiry(url: str, buffer_days: int = 30) -> None:

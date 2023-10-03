@@ -1,78 +1,37 @@
-import logging
-import socket
 import sys
 import time
 
-import requests
+from logger import logger
+import checks.ping as ping_check
+import checks.ssl_expiry as ssl_check
+import checks.connection as conn_check
+import checks.config as config_check
 
-from config import ERROR_LOG_NAME, INFO_LOG_NAME, PING_TIMEOUT, TEST_URLS
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-
-# Formatter
-formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-
-# Console handler
-handler = logging.StreamHandler(sys.stdout)
-handler.setLevel(logging.INFO)
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-
-# Log handler
-file_handler = logging.FileHandler(INFO_LOG_NAME)
-file_handler.setLevel(logging.INFO)
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
-
-# Error handler
-file_handler = logging.FileHandler(ERROR_LOG_NAME)
-file_handler.setLevel(logging.ERROR)
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
-
+from config import PING_TIMEOUT, TEST_URLS
 
 class HealthChecker:
     @staticmethod
     def run() -> None:
-        logger.info(
-            "Starting health check at %s", time.strftime("%H:%M:%S", time.localtime())
-        )
+        logger.info("Starting health check at %s", time.strftime("%H:%M:%S", time.localtime()))
+        
+        # Validate the config first
+        if not config_check.validate_config(TEST_URLS):
+            logger.error("Configuration validation failed!")
+            sys.exit(1)
+
         for key, value in TEST_URLS.items():
             logger.info("Checking %s...", key)
             for url in value:
-                if HealthChecker.ping(url):
-                    logger.info("Endpoint %s is up!", url)
-                else:
-                    logger.error("Endpoint %s is down!", url)
+                ping_check.check_ping(url)
+                ssl_check.check_ssl_expiry(url)
             logger.info("Finished checking %s.", key)
-        logger.info(
-            "Finished health check at %s", time.strftime("%H:%M:%S", time.localtime())
-        )
-
-    @staticmethod
-    def ping(url: str) -> bool:
-        try:
-            response = requests.get(url)
-            return response.status_code == 200
-        except requests.RequestException:
-            return False
-
-    @staticmethod
-    def is_connected() -> bool:
-        """Check if the device is connected to the internet."""
-        try:
-            socket.create_connection(("8.8.8.8", 53))
-            logger.info("Connected to Wi-Fi.")
-            return True
-        except OSError:
-            logger.error("Not connected to Wi-Fi.")
-        return False
+            
+        logger.info("Finished health check at %s", time.strftime("%H:%M:%S", time.localtime()))
 
 
 if __name__ == "__main__":
     while True:
-        if HealthChecker.is_connected():
+        if conn_check.check_connection():
             HealthChecker.run()
         else:
             logger.error("Lost Wi-Fi connectivity. Stopping health checks.")

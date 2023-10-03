@@ -1,6 +1,6 @@
 # Health Checker Tool
 
-A comprehensive monitoring tool designed to assess the health of specified URLs and database connections. With the flexibility to perform simple ping checks, database connection tests, and the ability to customize response times, this tool ensures you are always informed about the status of your services and databases. 
+A comprehensive monitoring tool designed to assess and send notifications about the health of specified URLs and database connections. With the flexibility to perform simple ping checks, database connection tests, and the ability to customize response times, this tool ensures you are always informed about the status of your services and databases. 
 
 <img width="885" alt="Screenshot 2023-10-03 at 5 54 50 PM" src="https://github.com/JoshCap20/health-checks/assets/97563979/e841349c-bdc1-4134-8754-ddf6f5bc439b">
 
@@ -14,7 +14,7 @@ A comprehensive monitoring tool designed to assess the health of specified URLs 
   
 - **Wi-Fi Connectivity Check**: Continuously checks for Wi-Fi connectivity and pauses the health checks if disconnected.
 
-- **Alerts**: Configurable alerts (like email notifications) based on specific log levels to keep you informed.
+- **Alerts**: Configurable alerts (like email notifications and telegram) based on specific log levels to keep you informed.
 
 ## Installation
 ```bash
@@ -67,7 +67,13 @@ For instance, to set up an email alert:
       "smtp_port": 587,
       "smtp_user": "your_smtp_user@gmail.com",
       "smtp_pass": "your_password",
-      "alert_level": "ERROR"
+      "alert_level": "WARNING"
+    },
+   "telegram": {
+      "active": true,
+      "bot_token": "bot_token",
+      "user_id": "user_id",
+      "alert_level": "INFO"
     }
   }
 }

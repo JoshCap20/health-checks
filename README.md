@@ -2,6 +2,8 @@
 
 A comprehensive monitoring tool designed to assess the health of specified URLs and database connections. With the flexibility to perform simple ping checks, database connection tests, and the ability to customize response times, this tool ensures you are always informed about the status of your services and databases. 
 
+<img width="885" alt="Screenshot 2023-10-03 at 5 54 50 PM" src="https://github.com/JoshCap20/health-checks/assets/97563979/e841349c-bdc1-4134-8754-ddf6f5bc439b">
+
 ## Features
 
 - **Ping Check**: Verifies if a URL is reachable and logs the status.

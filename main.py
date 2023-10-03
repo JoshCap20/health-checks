@@ -36,12 +36,27 @@ def get_args():
         help="Comma-separated list of modules to be used for checking. Available modules: ping, ssl_expiry. Default is 'ping,ssl_expiry'.",
     )
 
+    # Min response time argument
+    parser.add_argument(
+        "--error-response-time",
+        type=float,
+        default=2,  # 2000ms as an example default
+        help="Minimum acceptable response time in seconds. Any response slower than this will trigger an error.",
+    )
+
+    # Warning response time argument
+    parser.add_argument(
+        "--warning-response-time",
+        type=float,
+        default=1,  # 1000ms as an example default
+        help="Response time in seconds to trigger a warning. Any response slower than this will trigger a warning or error, but faster than min-response-time will not trigger an error.",
+    )
+
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = get_args()
-    ping_timeout = args.ping_timeout
     urls = args.urls.split(",")
     modules = args.modules.split(",")
 
@@ -50,7 +65,7 @@ if __name__ == "__main__":
             functions = []
             for module in modules:
                 if module == "ping":
-                    functions.append(ping_check.check_ping)
+                    functions.append(lambda url: ping_check.check_ping(url=url, error_response_time=args.error_response_time, warning_response_time=args.warning_response_time))
             HealthChecker.run(urls, functions)
         else:
             logger.error("Lost Wi-Fi connectivity. Stopping health checks.")

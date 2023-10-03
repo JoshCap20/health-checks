@@ -97,13 +97,18 @@ if __name__ == "__main__":
                 mappings[module_function_mapping["db"]] = dbs
             if "ping" in modules:
                 mappings[module_function_mapping["ping"]] = urls
-            HealthChecker.run(mappings)
+            if mappings:
+                HealthChecker.run(mappings)
         else:
             logger.error("Lost Wi-Fi connectivity. Stopping health checks.")
             should_resume: str = input("Would you like to resume health checks? (y/n) ")
+            while should_resume.lower() not in ["y", "n"]:
+                should_resume = input(
+                    "Invalid input. Would you like to resume health checks? (y/n) "
+                )
             if should_resume.lower() == "y":
                 logger.info("Resuming health checks.")
-            else:
+            elif should_resume.lower() == "n":
                 logger.info("Exiting.")
                 sys.exit()
         time.sleep(args.ping_timeout)

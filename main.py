@@ -63,7 +63,7 @@ def get_args():
     parser.add_argument(
         "--dbs",
         type=str,
-        help="Comma-separated list of database connection strings to be checked. Example: "dbname='name' user='admin' host='host' password='password' port='5432'",
+        help="Comma-separated list of database connection strings to be checked. Example: `dbname='name' user='admin' host='host' password='password' port='5432'`",
         default="",
     )
 

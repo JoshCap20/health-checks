@@ -10,6 +10,12 @@ from logger import logger
 
 
 def get_args():
+    """
+    Parses command line arguments for the Health Checker Tool.
+
+    Returns:
+        argparse.Namespace: An object containing the parsed arguments.
+    """
     parser = argparse.ArgumentParser(description="Health Checker Tool")
 
     # Ping timeout argument
@@ -60,12 +66,21 @@ if __name__ == "__main__":
     urls = args.urls.split(",")
     modules = args.modules.split(",")
 
+    module_function_mapping = {
+        "ping": lambda url: ping_check.check_ping(
+            url=url,
+            error_response_time=args.error_response_time,
+            warning_response_time=args.warning_response_time,
+        )
+    }
+
     while True:
         if conn_check.check_connection():
-            functions = []
-            for module in modules:
-                if module == "ping":
-                    functions.append(lambda url: ping_check.check_ping(url=url, error_response_time=args.error_response_time, warning_response_time=args.warning_response_time))
+            functions = [
+                module_function_mapping[module]
+                for module in modules
+                if module in module_function_mapping
+            ]
             HealthChecker.run(urls, functions)
         else:
             logger.error("Lost Wi-Fi connectivity. Stopping health checks.")

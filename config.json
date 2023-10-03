@@ -1,0 +1,14 @@
+{
+    "alerts": {
+      "email": {
+        "active": false,
+        "to_email": "sample@gmail.com",
+        "smtp_server": "smtp.gmail.com",
+        "smtp_port": 587,
+        "smtp_user": "sender@gmail.com",
+        "smtp_pass": "password",
+        "alert_level": "ERROR"
+      }
+    }
+  }
+  

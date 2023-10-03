@@ -3,18 +3,22 @@ import sys
 
 from termcolor import colored
 
+from alerts.alert import AlertManager
+
+
 class ColoredFormatter(logging.Formatter):
     COLORS = {
-        'DEBUG': 'blue',
-        'INFO': 'green',
-        'WARNING': 'yellow',
-        'ERROR': 'red',
-        'CRITICAL': 'magenta',
+        "DEBUG": "blue",
+        "INFO": "green",
+        "WARNING": "yellow",
+        "ERROR": "red",
+        "CRITICAL": "magenta",
     }
 
     def format(self, record):
         log_message = super(ColoredFormatter, self).format(record)
         return colored(log_message, self.COLORS.get(record.levelname))
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -50,3 +54,6 @@ logger.addHandler(console_handler)
 logger.addHandler(info_file_handler)
 logger.addHandler(debug_file_handler)
 logger.addHandler(error_file_handler)
+
+# Alert Managers
+alert_manager = AlertManager(logger)

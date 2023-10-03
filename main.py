@@ -3,6 +3,7 @@ import sys
 import time
 
 import checks.connection as conn_check
+import checks.database as db_check
 import checks.ping as ping_check
 from utils.health_checker import HealthChecker
 from utils.logger import logger
@@ -57,30 +58,43 @@ def get_args():
         help="Response time in seconds to trigger a warning. Any response slower than this will trigger a warning or error, but faster than min-response-time will not trigger an error.",
     )
 
+    # Database connection strings argument (comma-separated)
+    parser.add_argument(
+        "--dbs",
+        type=str,
+        help="Comma-separated list of database connection strings to be checked.",
+        default="",
+    )
+
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = get_args()
+
     urls = args.urls.split(",")
     modules = args.modules.split(",")
+    dbs = args.dbs.split(",") if args.dbs else []
 
     module_function_mapping = {
         "ping": lambda url: ping_check.check_ping(
             url=url,
             error_response_time=args.error_response_time,
             warning_response_time=args.warning_response_time,
-        )
+        ),
+        "db": lambda conn_str: db_check.check_db_connection(
+            conn_string=conn_str,
+            error_response_time=args.error_response_time,
+            warning_response_time=args.warning_response_time,
+        ),
     }
 
     while True:
         if conn_check.check_connection():
-            functions = [
-                module_function_mapping[module]
-                for module in modules
-                if module in module_function_mapping
-            ]
-            HealthChecker.run(urls, functions)
+            if "db" in modules:
+                HealthChecker.run(dbs, [module_function_mapping["db"]])
+            if "ping" in modules:
+                HealthChecker.run(urls, [module_function_mapping["ping"]])
         else:
             logger.error("Lost Wi-Fi connectivity. Stopping health checks.")
             should_resume: str = input("Would you like to resume health checks? (y/n) ")

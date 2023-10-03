@@ -4,7 +4,6 @@ import time
 
 import checks.connection as conn_check
 import checks.ping as ping_check
-import checks.ssl_expiry as ssl_check
 from utils.health_checker import HealthChecker
 from utils.logger import logger
 

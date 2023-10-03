@@ -1,11 +1,18 @@
 # Health Checker Tool
 
-A robust tool designed to monitor and report on the health of specified URLs. It includes a variety of checks like simple pinging and custom response times. Alerts and logs are generated based on the health of the URLs, ensuring you are always aware of the status of your services.
+A comprehensive monitoring tool designed to assess the health of specified URLs and database connections. With the flexibility to perform simple ping checks, database connection tests, and the ability to customize response times, this tool ensures you are always informed about the status of your services and databases. 
 
 ## Features
+
 - **Ping Check**: Verifies if a URL is reachable and logs the status.
-- **Custom Response Time Thresholds**: Set custom thresholds for warning and error response times.
+  
+- **Database Connection Check**: Tests the connection to a given database and logs the response time.
+
+- **Custom Response Time Thresholds**: Define your own thresholds for warning and error response times.
+  
 - **Wi-Fi Connectivity Check**: Continuously checks for Wi-Fi connectivity and pauses the health checks if disconnected.
+
+- **Alerts**: Configurable alerts (like email notifications) based on specific log levels to keep you informed.
 
 ## Installation
 ```bash
@@ -16,10 +23,16 @@ pip install -r requirements.txt
 
 ## Usage
 
-Run the tool using:
+To monitor a single URL:
 
 ```bash
-python main.py --urls "https://example.com,https://another-example.com" 
+python main.py --urls "https://example.com"
+```
+
+To monitor both URLs and databases:
+
+```bash
+python main.py --modules "ping,db" --urls "https://example.com,https://another-example.com" --dbs "your_database_connection_string"
 ```
 
 ### Command-Line Arguments
@@ -28,15 +41,39 @@ python main.py --urls "https://example.com,https://another-example.com"
   
 - `--urls`: A comma-separated list of URLs you want to monitor.
   
-- `--modules`: Modules to be used for health checking. Available options are `ping` and more to be added later. Default is `ping`.
+- `--dbs`: A comma-separated list of database connection strings you want to check.
+  
+- `--modules`: Modules to be used for health checking. Available options are `ping`, `db`, and more to be added later. Default is `ping`.
   
 - `--error-response-time`: Set the minimum acceptable response time in seconds. Any response slower than this will trigger an error. Default is 2 seconds.
   
 - `--warning-response-time`: Set the response time threshold for warnings. Any response slower than this but faster than the error-response-time will trigger a warning. Default is 1 second.
 
+### Alert Configuration
+
+Alerts are configurable through `config.json`. You can set up various alert types, such as email notifications. 
+
+For instance, to set up an email alert:
+
+```json
+{
+  "alerts": {
+    "email": {
+      "active": true,
+      "to_email": "your_email@gmail.com",
+      "smtp_server": "smtp.gmail.com",
+      "smtp_port": 587,
+      "smtp_user": "your_smtp_user@gmail.com",
+      "smtp_pass": "your_password",
+      "alert_level": "ERROR"
+    }
+  }
+}
+```
+
 ## Expansion
 
-The architecture of this tool is modular, making it easy to expand with additional health checks as needed. New checks can be added in the `checks` directory and then integrated into the main tool.
+The architecture of this tool is modular, allowing for seamless expansion with additional health checks or alert methods. New checks can be added in the `checks` directory, and new alert methods in the `alerts` directory.
 
 ## Contributing
 
